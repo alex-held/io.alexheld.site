@@ -54,7 +54,7 @@ languages:
     languageName: "de"
     weight: 2
     contentDir: "content/de"
-    title: "Das ist der deutsche Titel"
+    title: "Alexander Held"
     description: "Das ist die deutsche Beschreibung"
     params:
       form:
