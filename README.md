@@ -23,7 +23,7 @@
 Inside the projects root directory run follwing command to run the hugo server.
 
 ```sh
-hugu server -D
+hugo server -D
 ```
 
 Open the browser on <http://localhost:1313>
