@@ -5,7 +5,7 @@
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
   <a href="https://twitter.com/0\_alexheld" target="_blank">
-    <img alt="Twitter: 0\_alexheld" src="https://img.shields.io/twitter/follow/0\_alexheld.svg?style=social" />
+    <img alt="Twitter: 0_alexheld" src="https://img.shields.io/twitter/follow/0_alexheld.svg?style=social" />
   </a>
 </p>
 
