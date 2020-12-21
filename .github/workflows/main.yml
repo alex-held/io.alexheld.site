@@ -20,9 +20,6 @@ jobs:
         with:
           ref: master
 
-      - name: Get Theme
-        run: git submodule update --init --recursive
-
       - name: Update theme to Latest commit
         run: git submodule update --remote --merge
 
