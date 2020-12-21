@@ -1,6 +1,6 @@
 baseURL: "/"
 languageCode: "en-us"
-theme: "website-theme"
+theme: "io.alexheld.site-theme"
 title: "Alexander Held"
 
 defaultContentLanguage: "en"
