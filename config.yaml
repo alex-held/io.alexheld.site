@@ -15,12 +15,13 @@ params:
     link: "contact"
 
   copy:
-    message: "© 2020 -Alexander Held"
+    message: "© 2020 - Alexander Held"
 
   author: "Alexander Held"
 
   hero:
     textColor: ""
+    imageFile: "developer.svg"
 
   separator:
     show: false
