@@ -33,6 +33,8 @@ params:
   social:
     twitter: "https://twitter.com/0_alexheld"
     github: "https://github.com/alex-held"
+    xing: "https://www.xing.com/profile/Alexander_Held57"
+    stack-overflow: "https://stackoverflow.com/users/10756426/alexander-held"
 
   languageSwitcher:
     show: true
