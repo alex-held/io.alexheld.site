@@ -37,6 +37,9 @@ params:
     xing: "https://www.xing.com/profile/Alexander_Held57"
     stack-overflow: "https://stackoverflow.com/users/10756426/alexander-held"
 
+  documents:
+    resumeUrl: "https://docs.google.com/document/d/e/2PACX-1vQ1LqGPhWyIArZ33aZIdKKDCUM_PBdtrJwxQfQacNpR9ZAdkk-0m067EsfueHShZBeoJ72MUvChEjuo/pub?embedded=true"
+
   languageSwitcher:
     show: true
 
