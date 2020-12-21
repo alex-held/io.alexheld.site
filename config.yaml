@@ -44,6 +44,21 @@ params:
     version: "5.7.2"
     integrity: "sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP"
 
+  form:
+    netlify: true
+    action: "https://formspree.io/f/xrgoobja"
+    method: "POST"
+    inputNameName: "name"
+    inputNameLabel: "Name"
+    inputNamePlaceholder: "Your name"
+    inputEmailName: "email"
+    inputEmailLabel: "Email"
+    inputEmailPlaceholder: "Your email"
+    inputMsgName: "message"
+    inputMsgLabel: "Write something"
+    inputMsgLength: 750
+    inputSubmitValue: "Send"
+
 languages:
   en:
     languageName: "en"
