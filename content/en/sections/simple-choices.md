@@ -1,5 +1,5 @@
 ---
-title : "Simple Choices"
+title: "Simple Choices"
 description: ""
 draft: false
 weight: 2

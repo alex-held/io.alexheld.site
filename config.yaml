@@ -31,6 +31,12 @@ params:
     phone: "+49 157771924534"
     address: "Cologne, Germany"
 
+  posts:
+    showAuthor: true
+    showDate: true
+    showTags: true
+    dateFormat: "Monday, Jan, 2006"
+
   social:
     twitter: "https://twitter.com/0_alexheld"
     github: "https://github.com/alex-held"
