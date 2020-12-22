@@ -36,7 +36,7 @@ Wir beginnen unseren Ausflug hier mit dieser Ausgangslage.
 
 ###### BuilderExample.java
 
-```java
+{{< highlight java >}}
 public class BuilderExample {
 
  public Client foo() {
@@ -59,13 +59,13 @@ public class BuilderExample {
   return builder.build();
  }
 }
-```
+{{< /highlight >}}
 
 Lass uns loslegen, indem wir uns die Funktionalität aus `BuilderExample.java` kopieren und nach Kotlin portieren.
 
 ###### main.kt
 
-``` kotlin
+{{< highlight kotlin >}}
 fun createClientInternal(fn: String, ln: String, twitter: String, city: String, company: String): Client {
  val builder = ClientBuilder()
  builder.firstName = fn
@@ -82,13 +82,13 @@ fun createClientInternal(fn: String, ln: String, twitter: String, city: String, 
 
  return builder.build()
 }
-```
+{{< /highlight >}}
 
 Wir können am effizentesten immer wieder kleine Verbesserungen machen und experimentieren wenn wir uns darauf verlassen können, dass wir Fehler schnell bemerken. Deswegen decken wir die Grundfunktionalität grob mit Tests ab.
 
 ###### MainKtTest.kt
 
-``` kotlin
+{{< highlight kotlin >}}
 @Test
 fun createClientInternal() {
  val expected = Client("Alexander", "Held", Company("MegaCorp", "Cologne"), Twitter("0_alexheld"))
@@ -107,29 +107,29 @@ fun createClientInternal() {
  assertEquals(expected.company.name, result.company.name)
  assertEquals(expected.company.city, result.company.city)
 }
-```
+{{< /highlight >}}
 
 Während dem schreiben der Tests fällt auf, dass wir um die Clients im Debugger besser von einander unterscheiden zu können uns eine kleine Hilfsfunktion bauen.
 
-``` kotlin
+{{< highlight kotlin >}}
 fun Client.toConsoleString(): String {
  return "${twitter.handle} ${company.name}"
 }
-```
+{{< /highlight >}}
 
 `toConsoleString()` erfüllt zwar ihren Zweck, aber nur wenn ich ich die Funktion aufrufe.
 
-``` kotlin
+{{< highlight kotlin >}}
 val Client.consoleString: String
  get() = "${twitter.handle} ${company.name}"
-```
+{{< /highlight >}}
 
 So ists besser und lässt sich auch ganz simpel testen 👍🏻
 Gleichzeitig haben wir uns noch eine Test Hilfsfunktion gebaut um nicht in jedem Test code zu duplizieren.
 
 ###### MainKtTest.kt
 
-``` kotlin
+{{< highlight kotlin >}}
 private fun createSubject(
   fn: String = "Alexander",
   ln: String = "Held",
@@ -147,7 +147,7 @@ private fun createSubject(
 
   assertEquals(expected, actual)
  }
-```
+{{< /highlight >}}
 
 Okay. Wir könnten anstelle von neue Builder mitten in der Business-Logik zu erzeugen, einfach nur Funktionen weiterreichen, die irgendwann lazy den Client bauen. Somit hätten wir Business Logik bei BusinessLogik und Funktionen bei Funktionen. Das Stichwort ist hier [Kohärenz](<https://de.wikipedia.org/wiki/Koh%C3%A4renz_(Physik)>).
 
@@ -156,19 +156,19 @@ Wir übergeben `createClient` als Parameter die Funktion `accept(cb: ClientBuild
 
 ###### main.kt
 
-``` kotlin
+{{< highlight kotlin >}}
 fun createClient(c: Consumer<ClientBuilder>): Client {
  val builder = ClientBuilder()
  c.accept(builder)
  return builder.build()
 }
-```
+{{< /highlight >}}
 
 Der nächste Schritt ist es `createClient` aufzurufen. Dazu definieren wir inline ein `object` dass `Consumer<ClientBuilder>` implementiert. Hierzu müssen wir `accept(builder: ClientBuilder)` überschreiben.
 
 ###### main.kt
 
-``` kotlin
+{{< highlight kotlin >}}
 fun createClientInternal(): Client {
  return createClient(
   object: Consumer<ClientBuilder> {
@@ -189,13 +189,13 @@ fun createClientInternal(): Client {
   }
  )
 }
-```
+{{< /highlight >}}
 
 Jetzt kriegen wir aber von den Tests einen auf den Deckel. Wir fügen hier schnell eine Hilfsmethode hinzu die uns den benötigten `Consumer<ClientBuilder>` herstellt. Schön muss die nicht sein, die wird nur temporär da sein. (Wie das meisste hier..)
 
 ###### MainKtTest.kt
 
-``` kotlin
+{{< highlight kotlin >}}
  private fun createConsumer(): Consumer<ClientBuilder> {
   return Consumer<ClientBuilder> {
    it.firstName = "Alexander"
@@ -217,13 +217,13 @@ Jetzt kriegen wir aber von den Tests einen auf den Deckel. Wir fügen hier schne
   assertEquals(expected.company.name, actual.company.name)
   assertEquals(expected.company.city, actual.company.city)
  }
-```
+{{< /highlight >}}
 
 Wir machen aus der inline `Consumer<ClientBuilder>` Implentiertung eine lambda. `builder` übernimmt weiterhin die selbe Rolle: Konfiguration des `ClientBuilders`.
 
 ###### main.kt
 
-``` kotlin
+{{< highlight kotlin >}}
 fun createClientInternal(): Client {
  return createClient(
   Consumer { builder ->
@@ -240,14 +240,14 @@ fun createClientInternal(): Client {
   }
  )
 }
-```
+{{< /highlight >}}
 
 `builder` bennenen wir um nach `it`.
 [it](https://discuss.kotlinlang.org/t/it-keyword/6869) hat in kotlin eine besondere Bedeutung. Es ist quasi der default 'Name', wenn es nur einen Lamda Argument gibt.
 
 ###### main.kt
 
-``` kotlin
+{{< highlight kotlin >}}
 fun createClientInternal(): Client {
  return createClient(
   Consumer { it ->
@@ -264,7 +264,7 @@ fun createClientInternal(): Client {
   }
  )
 }
-```
+{{< /highlight >}}
 
 Dann löschen wir `it` doch mal. Und die Lambda Pfeile brauchen wir durch `it` auch nicht mehr. Wir können `it` aber trotzdem im scope benutzen wir wir wollen. Der Kompiler weiß was abgeht.
 
@@ -272,7 +272,7 @@ Dann löschen wir `it` doch mal. Und die Lambda Pfeile brauchen wir durch `it` a
 
 ###### main.kt
 
-``` kotlin
+{{< highlight kotlin >}}
 fun createClientInternal(): Client {
  return createClient(
   Consumer {
@@ -289,7 +289,7 @@ fun createClientInternal(): Client {
   }
  )
 }
-```
+{{< /highlight >}}
 
 Als nächstes ersetzen wir in der `createClient` Funcktion den Parameter `c: Consumer<ClientBuilder>)` durch `c: (ClientBuilder) -> Unit`. Wir ersetzen hier eine Implementierung des interfaces `Consumer<ClientBuilder>` durch eine Lamda mit einer anderen Lamda `(ClientBuilder) -> Unit`. Der Vorteil ist, dass wir nicht mehr mehr an die Implentierung der Methode `Consumer<ClientBuilder>.accept(ClientBuilder)` gekoppelt sind.
 
@@ -297,7 +297,7 @@ Wir haben also `createClient` die `(ClientBuilder) -> Unit` als Parameter erwart
 
 ###### main.kt
 
-``` kotlin
+{{< highlight kotlin >}}
 fun createClient(c: (ClientBuilder) -> Unit): Client {
  val builder = ClientBuilder()
  c(builder)
@@ -319,14 +319,14 @@ fun createClient(): Client {
    it.company = companyBuilder.build()
   })
 }
-```
+{{< /highlight >}}
 
 Nächster kleiner Schritt ist die runden Klammern der `createClient()` Funktion zu entfernen.
 Der Kotlin Compiler gestattet es runde Klammern für den letzen Parameter wegzulassen. Da wir in diesem Fall nur einen haben, können die Klammern ganz weg.
 
 ###### main.kt
 
-``` kotlin
+{{< highlight kotlin >}}
 fun createClient(c: ClientBuilder.() -> Unit): Client {
  val builder = ClientBuilder()
  c(builder)
@@ -347,7 +347,7 @@ fun createClient(): Client {
   it.company = companyBuilder.build()
  }
 }
-```
+{{< /highlight >}}
 
 Und ab jetzt wird es richtig spannnend 😈
 
@@ -357,7 +357,7 @@ Während bei der Lamda `c: (ClientBuilder) -> Unit` ein `ClientBuilder` als Para
 
 ###### main.kt
 
-``` kotlin
+{{< highlight kotlin >}}
 fun createClient(c: ClientBuilder.() -> Unit): Client {
  val builder = ClientBuilder()
  c(builder)
@@ -379,39 +379,39 @@ fun createClient(): Client {
   company = companyBuilder.build()
  }
 }
-```
+{{< /highlight >}}
 
 Ich gebe zu der nächste Code Block hat es in sich.
 Schau ihn dir erstmal an und dann dekonstruieren wir den mal.
 
 ###### main.kt
 
-``` kotlin
+{{< highlight kotlin >}}
 fun ClientBuilder.twitter(c: TwitterBuilder.() -> Unit)  {
  twitter = TwitterBuilder().apply(c).build()
 }
-```
+{{< /highlight >}}
 
 **[1]** `TwitterBuilder().apply(c).build()`
 
 [apply](https://kotlinlang.org/docs/reference/scope-functions.html#apply) hat folgende Signatur:
 
-``` kotlin
-inline fun <T> T.apply(block: T.() -> Unit): T
-```
+{{< highlight kotlin >}}
+inline fun \<T> T.apply(block: T.() -> Unit): T
+{{< /highlight >}}
 
 Da `T` keine Typeneinschränkungen hat, lässt sich `apply` auf jede Instanz anwenden.
 Wenn apply ausgeführt wird, wird es aus dem Kontext des Empfängs aufgerufen, wendet dann die als Parameter mitgegebene Lamda `block: T.() -> Unit` auf den Empfänger an (mutiert seinen State) und gibt den Empfänger als Rückgabewert zurück.
 
 Übersetzen kann man `TwitterBuilder().apply(c).build()` also **sinngemäß** mit
 
-``` kotlin
+{{< highlight kotlin >}}
 fun buildTwitter(c: TwitterBuilder.() -> Unit): Twitter {
  var builder = TwitterBuilder()
  c(builder)
  return builder.build()
 }
-```
+{{< /highlight >}}
 
 <br>
 
@@ -427,7 +427,7 @@ Wir können den `TwitterBuilder` aus unserer 'komplexen Business Logik' entferne
 
 ###### main.kt
 
-``` kotlin
+{{< highlight kotlin >}}
 fun createClient(): Client {
 
  return createClient {
@@ -452,14 +452,13 @@ fun createClient(c: ClientBuilder.() -> Unit): Client {
 fun ClientBuilder.twitter(c: TwitterBuilder.() -> Unit)  {
  twitter = TwitterBuilder().apply(c).build()
 }
-
-```
+{{< /highlight >}}
 
 Wir führen den letzen Schritt jetzt auch nocheinmal mit dem `CompanyBuilder` durch und kommen zu folgendem Endergebnis.
 
 ## Vorher
 
-``` java
+{{< highlight java >}}
 public class BuilderExample {
 
  public Client createClient() {
@@ -482,12 +481,11 @@ public class BuilderExample {
   return builder.build();
  }
 }
-```
+{{< /highlight >}}
 
 ## Nachher
 
-``` kotlin
-
+{{< highlight kotlin >}}
 fun createClient(): Client {
  return createClient {
   firstName = "Alexander"
@@ -501,4 +499,4 @@ fun createClient(): Client {
   }
  }
 }
-```
+{{< /highlight >}}
