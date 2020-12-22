@@ -88,9 +88,9 @@ Wir übergeben <code>createClient</code> als Parameter die Funktion <code>accept
 }
 </code></pre></div><p>Der nächste Schritt ist es <code>createClient</code> aufzurufen. Dazu definieren wir inline ein <code>object</code> dass <code>Consumer&lt;ClientBuilder></code> implementiert. Hierzu müssen wir <code>accept(builder: ClientBuilder)</code> überschreiben.</p><h6 id=mainkt-2>main.kt</h6><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-kotlin data-lang=kotlin><span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createClientInternal</span>(): Client {
  <span style=color:#66d9ef>return</span> createClient(
-<span style=display:block;width:100%;background-color:#3c3d38>  <span style=color:#66d9ef>object</span>: Consumer&lt;ClientBuilder&gt; {
-</span><span style=display:block;width:100%;background-color:#3c3d38>   <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>accept</span>(builder: ClientBuilder) {
-</span>    builder.firstName = <span style=color:#e6db74>&#34;Alexander&#34;</span>
+  <span style=color:#66d9ef>object</span>: Consumer&lt;ClientBuilder&gt; {
+   <span style=color:#66d9ef>override</span> <span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>accept</span>(builder: ClientBuilder) {
+    builder.firstName = <span style=color:#e6db74>&#34;Alexander&#34;</span>
     builder.lastName = <span style=color:#e6db74>&#34;Held&#34;</span>
 
     <span style=color:#66d9ef>val</span> twitterBuilder = TwitterBuilder()
@@ -106,8 +106,8 @@ Wir übergeben <code>createClient</code> als Parameter die Funktion <code>accept
   }
  )
 }
-</code></pre></div><p>Jetzt kriegen wir aber von den Tests einen auf den Deckel. Wir fügen hier schnell eine Hilfsmethode hinzu die uns den benötigten <code>Consumer&lt;ClientBuilder></code> herstellt. Schön muss die nicht sein, die wird nur temporär da sein. (Wie das meisste hier..)</p><h6 id=mainkttestkt-2>MainKtTest.kt</h6><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-kotlin data-lang=kotlin><span style=display:block;width:100%;background-color:#3c3d38> <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createConsumer</span>(): Consumer&lt;ClientBuilder&gt; {
-</span>  <span style=color:#66d9ef>return</span> Consumer&lt;ClientBuilder&gt; {
+</code></pre></div><p>Jetzt kriegen wir aber von den Tests einen auf den Deckel. Wir fügen hier schnell eine Hilfsmethode hinzu die uns den benötigten <code>Consumer&lt;ClientBuilder></code> herstellt. Schön muss die nicht sein, die wird nur temporär da sein. (Wie das meisste hier..)</p><h6 id=mainkttestkt-2>MainKtTest.kt</h6><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-kotlin data-lang=kotlin> <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createConsumer</span>(): Consumer&lt;ClientBuilder&gt; {
+  <span style=color:#66d9ef>return</span> Consumer&lt;ClientBuilder&gt; {
    <span style=color:#66d9ef>it</span>.firstName = <span style=color:#e6db74>&#34;Alexander&#34;</span>
    <span style=color:#66d9ef>it</span>.lastName = <span style=color:#e6db74>&#34;Held&#34;</span>
    <span style=color:#66d9ef>it</span>.twitter = Twitter(<span style=color:#e6db74>&#34;0_alexheld&#34;</span>)
@@ -119,8 +119,8 @@ Wir übergeben <code>createClient</code> als Parameter die Funktion <code>accept
  <span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createClient_should_return_client_with_same_values</span>() {
   <span style=color:#66d9ef>val</span> expected = defaultClient
 
-<span style=display:block;width:100%;background-color:#3c3d38>  <span style=color:#66d9ef>val</span> actual = createClient(createConsumer())
-</span>
+  <span style=color:#66d9ef>val</span> actual = createClient(createConsumer())
+
   assertEquals(expected.firstName, <span style=color:#66d9ef>actual</span>.firstName)
   assertEquals(expected.lastName, <span style=color:#66d9ef>actual</span>.lastName)
   assertEquals(expected.twitter.handle, <span style=color:#66d9ef>actual</span>.twitter.handle)
@@ -128,10 +128,10 @@ Wir übergeben <code>createClient</code> als Parameter die Funktion <code>accept
   assertEquals(expected.company.city, <span style=color:#66d9ef>actual</span>.company.city)
  }
 </code></pre></div><p>Wir machen aus der inline <code>Consumer&lt;ClientBuilder></code> Implentiertung eine lambda. <code>builder</code> übernimmt weiterhin die selbe Rolle: Konfiguration des <code>ClientBuilders</code>.</p><h6 id=mainkt-3>main.kt</h6><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-kotlin data-lang=kotlin><span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createClientInternal</span>(): Client {
-<span style=display:block;width:100%;background-color:#3c3d38> <span style=color:#66d9ef>return</span> createClient(
-</span><span style=display:block;width:100%;background-color:#3c3d38>  Consumer { builder <span style=color:#f92672>-&gt;</span>
-</span><span style=display:block;width:100%;background-color:#3c3d38>   builder.firstName = <span style=color:#e6db74>&#34;Alexander&#34;</span>
-</span>   builder.lastName = <span style=color:#e6db74>&#34;Held&#34;</span>
+ <span style=color:#66d9ef>return</span> createClient(
+  Consumer { builder <span style=color:#f92672>-&gt;</span>
+   builder.firstName = <span style=color:#e6db74>&#34;Alexander&#34;</span>
+   builder.lastName = <span style=color:#e6db74>&#34;Held&#34;</span>
 
    <span style=color:#66d9ef>val</span> twitterBuilder = TwitterBuilder()
    twitterBuilder.handle = <span style=color:#e6db74>&#34;0_alexheld&#34;</span>
@@ -146,45 +146,45 @@ Wir übergeben <code>createClient</code> als Parameter die Funktion <code>accept
 </code></pre></div><p><code>builder</code> bennenen wir um nach <code>it</code>.
 <a href=https://discuss.kotlinlang.org/t/it-keyword/6869>it</a> hat in kotlin eine besondere Bedeutung. Es ist quasi der default &lsquo;Name&rsquo;, wenn es nur einen Lamda Argument gibt.</p><h6 id=mainkt-4>main.kt</h6><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-kotlin data-lang=kotlin><span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createClientInternal</span>(): Client {
  <span style=color:#66d9ef>return</span> createClient(
-<span style=display:block;width:100%;background-color:#3c3d38>  Consumer { <span style=color:#66d9ef>it</span> <span style=color:#f92672>-&gt;</span>
-</span><span style=display:block;width:100%;background-color:#3c3d38>   <span style=color:#66d9ef>it</span>.firstName = <span style=color:#e6db74>&#34;Alexander&#34;</span>
-</span><span style=display:block;width:100%;background-color:#3c3d38>   <span style=color:#66d9ef>it</span>.lastName = <span style=color:#e6db74>&#34;Held&#34;</span>
-</span>
+  Consumer { <span style=color:#66d9ef>it</span> <span style=color:#f92672>-&gt;</span>
+   <span style=color:#66d9ef>it</span>.firstName = <span style=color:#e6db74>&#34;Alexander&#34;</span>
+   <span style=color:#66d9ef>it</span>.lastName = <span style=color:#e6db74>&#34;Held&#34;</span>
+
    <span style=color:#66d9ef>val</span> twitterBuilder = TwitterBuilder()
    twitterBuilder.handle = <span style=color:#e6db74>&#34;0_alexheld&#34;</span>
-<span style=display:block;width:100%;background-color:#3c3d38>   <span style=color:#66d9ef>it</span>.twitter = twitterBuilder.build()
-</span>
+   <span style=color:#66d9ef>it</span>.twitter = twitterBuilder.build()
+
    <span style=color:#66d9ef>val</span> companyBuilder = CompanyBuilder()
    companyBuilder.name = <span style=color:#e6db74>&#34;MegaCorp&#34;</span>
-<span style=display:block;width:100%;background-color:#3c3d38>   <span style=color:#66d9ef>it</span>.company = companyBuilder.build()
-</span>  }
+   <span style=color:#66d9ef>it</span>.company = companyBuilder.build()
+  }
  )
 }
 </code></pre></div><p>Dann löschen wir <code>it</code> doch mal. Und die Lambda Pfeile brauchen wir durch <code>it</code> auch nicht mehr. Wir können <code>it</code> aber trotzdem im scope benutzen wir wir wollen. Der Kompiler weiß was abgeht.</p><p><img src=./images/it_lamda_default.png alt="it ide-syntax hightlighting"></p><h6 id=mainkt-5>main.kt</h6><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-kotlin data-lang=kotlin><span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createClientInternal</span>(): Client {
  <span style=color:#66d9ef>return</span> createClient(
-<span style=display:block;width:100%;background-color:#3c3d38>  Consumer {
-</span><span style=display:block;width:100%;background-color:#3c3d38>   <span style=color:#66d9ef>it</span>.firstName = <span style=color:#e6db74>&#34;Alexander&#34;</span>
-</span><span style=display:block;width:100%;background-color:#3c3d38>   <span style=color:#66d9ef>it</span>.lastName = <span style=color:#e6db74>&#34;Held&#34;</span>
-</span>
+  Consumer {
+   <span style=color:#66d9ef>it</span>.firstName = <span style=color:#e6db74>&#34;Alexander&#34;</span>
+   <span style=color:#66d9ef>it</span>.lastName = <span style=color:#e6db74>&#34;Held&#34;</span>
+
    <span style=color:#66d9ef>val</span> twitterBuilder = TwitterBuilder()
    twitterBuilder.handle = <span style=color:#e6db74>&#34;0_alexheld&#34;</span>
-<span style=display:block;width:100%;background-color:#3c3d38>   <span style=color:#66d9ef>it</span>.twitter = twitterBuilder.build()
-</span>
+   <span style=color:#66d9ef>it</span>.twitter = twitterBuilder.build()
+
    <span style=color:#66d9ef>val</span> companyBuilder = CompanyBuilder()
    companyBuilder.name = <span style=color:#e6db74>&#34;MegaCorp&#34;</span>
-<span style=display:block;width:100%;background-color:#3c3d38>   <span style=color:#66d9ef>it</span>.company = companyBuilder.build()
-</span>  }
+   <span style=color:#66d9ef>it</span>.company = companyBuilder.build()
+  }
  )
 }
-</code></pre></div><p>Als nächstes ersetzen wir in der <code>createClient</code> Funcktion den Parameter <code>c: Consumer&lt;ClientBuilder>)</code> durch <code>c: (ClientBuilder) -> Unit</code>. Wir ersetzen hier eine Implementierung des interfaces <code>Consumer&lt;ClientBuilder></code> durch eine Lamda mit einer anderen Lamda <code>(ClientBuilder) -> Unit</code>. Der Vorteil ist, dass wir nicht mehr mehr an die Implentierung der Methode <code>Consumer&lt;ClientBuilder>.accept(ClientBuilder)</code> gekoppelt sind.</p><p>Wir haben also <code>createClient</code> die <code>(ClientBuilder) -> Unit</code> als Parameter erwartet. <code>Unit</code> bedeutet in dem Fall: die Funktion soll kein Rückgabewert besitzen. Wir können also genau das selbe machen wie die ganze Zeit nur tauschen wir <code>c.accept(builder)</code> durch <code>c(builder)</code> aus.</p><h6 id=mainkt-6>main.kt</h6><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-kotlin data-lang=kotlin><span style=display:block;width:100%;background-color:#3c3d38><span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createClient</span>(c: (ClientBuilder) <span style=color:#f92672>-&gt;</span> Unit): Client {
-</span> <span style=color:#66d9ef>val</span> builder = ClientBuilder()
-<span style=display:block;width:100%;background-color:#3c3d38> c(builder)
-</span> <span style=color:#66d9ef>return</span> builder.build()
+</code></pre></div><p>Als nächstes ersetzen wir in der <code>createClient</code> Funcktion den Parameter <code>c: Consumer&lt;ClientBuilder>)</code> durch <code>c: (ClientBuilder) -> Unit</code>. Wir ersetzen hier eine Implementierung des interfaces <code>Consumer&lt;ClientBuilder></code> durch eine Lamda mit einer anderen Lamda <code>(ClientBuilder) -> Unit</code>. Der Vorteil ist, dass wir nicht mehr mehr an die Implentierung der Methode <code>Consumer&lt;ClientBuilder>.accept(ClientBuilder)</code> gekoppelt sind.</p><p>Wir haben also <code>createClient</code> die <code>(ClientBuilder) -> Unit</code> als Parameter erwartet. <code>Unit</code> bedeutet in dem Fall: die Funktion soll kein Rückgabewert besitzen. Wir können also genau das selbe machen wie die ganze Zeit nur tauschen wir <code>c.accept(builder)</code> durch <code>c(builder)</code> aus.</p><h6 id=mainkt-6>main.kt</h6><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-kotlin data-lang=kotlin><span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createClient</span>(c: (ClientBuilder) <span style=color:#f92672>-&gt;</span> Unit): Client {
+ <span style=color:#66d9ef>val</span> builder = ClientBuilder()
+ c(builder)
+ <span style=color:#66d9ef>return</span> builder.build()
 }
 
 <span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createClient</span>(): Client {
-<span style=display:block;width:100%;background-color:#3c3d38> <span style=color:#66d9ef>return</span> createClient( {
-</span>   <span style=color:#66d9ef>it</span>.firstName = <span style=color:#e6db74>&#34;Alexander&#34;</span>
+ <span style=color:#66d9ef>return</span> createClient( {
+   <span style=color:#66d9ef>it</span>.firstName = <span style=color:#e6db74>&#34;Alexander&#34;</span>
    <span style=color:#66d9ef>it</span>.lastName = <span style=color:#e6db74>&#34;Held&#34;</span>
 
    <span style=color:#66d9ef>val</span> twitterBuilder = TwitterBuilder()
@@ -195,8 +195,8 @@ Wir übergeben <code>createClient</code> als Parameter die Funktion <code>accept
    companyBuilder.name = <span style=color:#e6db74>&#34;MegaCorp&#34;</span>
    companyBuilder.city = <span style=color:#e6db74>&#34;Cologne&#34;</span>
    <span style=color:#66d9ef>it</span>.company = companyBuilder.build()
-<span style=display:block;width:100%;background-color:#3c3d38>  })
-</span>}
+  })
+}
 </code></pre></div><p>Nächster kleiner Schritt ist die runden Klammern der <code>createClient()</code> Funktion zu entfernen.
 Der Kotlin Compiler gestattet es runde Klammern für den letzen Parameter wegzulassen. Da wir in diesem Fall nur einen haben, können die Klammern ganz weg.</p><h6 id=mainkt-7>main.kt</h6><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-kotlin data-lang=kotlin><span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createClient</span>(c: ClientBuilder.() <span style=color:#f92672>-&gt;</span> Unit): Client {
  <span style=color:#66d9ef>val</span> builder = ClientBuilder()
@@ -204,8 +204,8 @@ Der Kotlin Compiler gestattet es runde Klammern für den letzen Parameter wegzul
  <span style=color:#66d9ef>return</span> builder.build()
 }
 <span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createClient</span>(): Client {
-<span style=display:block;width:100%;background-color:#3c3d38> <span style=color:#66d9ef>return</span> createClient {
-</span>  <span style=color:#66d9ef>it</span>.firstName = <span style=color:#e6db74>&#34;Alexander&#34;</span>
+ <span style=color:#66d9ef>return</span> createClient {
+  <span style=color:#66d9ef>it</span>.firstName = <span style=color:#e6db74>&#34;Alexander&#34;</span>
   <span style=color:#66d9ef>it</span>.lastName = <span style=color:#e6db74>&#34;Held&#34;</span>
 
   <span style=color:#66d9ef>val</span> twitterBuilder = TwitterBuilder()
@@ -216,28 +216,28 @@ Der Kotlin Compiler gestattet es runde Klammern für den letzen Parameter wegzul
   companyBuilder.name = <span style=color:#e6db74>&#34;MegaCorp&#34;</span>
   companyBuilder.city = <span style=color:#e6db74>&#34;Cologne&#34;</span>
   <span style=color:#66d9ef>it</span>.company = companyBuilder.build()
-<span style=display:block;width:100%;background-color:#3c3d38> }
-</span>}
-</code></pre></div><p>Und ab jetzt wird es richtig spannnend 😈</p><p>Wir ersetzen die Lamda <code>c: (ClientBuilder) -> Unit</code> durch eine <a href=https://kotlinexpertise.com/function-literals-with-receiver/>Lamda mit Empfänger</a> <code>c: ClientBuilder.() -> Unit</code>.</p><p>Während bei der Lamda <code>c: (ClientBuilder) -> Unit</code> ein <code>ClientBuilder</code> als Parameter erwartet wird, ist der <code>ClientBuilder</code> bei der <a href=https://kotlinexpertise.com/>Lamda mit Empfänger</a> derjenige der die Lamda ausführt. Dabei kommt wieder <code>it</code> ins spiel aber da wir das auch weglassen können können wir direkt auf alle Properties des <code>ClientBuilder</code> zugreifen. Ähnlich wie bei einer extension Methode.</p><h6 id=mainkt-8>main.kt</h6><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-kotlin data-lang=kotlin><span style=display:block;width:100%;background-color:#3c3d38><span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createClient</span>(c: ClientBuilder.() <span style=color:#f92672>-&gt;</span> Unit): Client {
-</span> <span style=color:#66d9ef>val</span> builder = ClientBuilder()
+ }
+}
+</code></pre></div><p>Und ab jetzt wird es richtig spannnend 😈</p><p>Wir ersetzen die Lamda <code>c: (ClientBuilder) -> Unit</code> durch eine <a href=https://kotlinexpertise.com/function-literals-with-receiver/>Lamda mit Empfänger</a> <code>c: ClientBuilder.() -> Unit</code>.</p><p>Während bei der Lamda <code>c: (ClientBuilder) -> Unit</code> ein <code>ClientBuilder</code> als Parameter erwartet wird, ist der <code>ClientBuilder</code> bei der <a href=https://kotlinexpertise.com/>Lamda mit Empfänger</a> derjenige der die Lamda ausführt. Dabei kommt wieder <code>it</code> ins spiel aber da wir das auch weglassen können können wir direkt auf alle Properties des <code>ClientBuilder</code> zugreifen. Ähnlich wie bei einer extension Methode.</p><h6 id=mainkt-8>main.kt</h6><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-kotlin data-lang=kotlin><span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createClient</span>(c: ClientBuilder.() <span style=color:#f92672>-&gt;</span> Unit): Client {
+ <span style=color:#66d9ef>val</span> builder = ClientBuilder()
  c(builder)
  <span style=color:#66d9ef>return</span> builder.build()
 }
 
 <span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createClient</span>(): Client {
  <span style=color:#66d9ef>return</span> createClient {
-<span style=display:block;width:100%;background-color:#3c3d38>  firstName = <span style=color:#e6db74>&#34;Alexander&#34;</span>
-</span><span style=display:block;width:100%;background-color:#3c3d38>  lastName = <span style=color:#e6db74>&#34;Held&#34;</span>
-</span>
+  firstName = <span style=color:#e6db74>&#34;Alexander&#34;</span>
+  lastName = <span style=color:#e6db74>&#34;Held&#34;</span>
+
   <span style=color:#66d9ef>val</span> twitterBuilder = TwitterBuilder()
   twitterBuilder.handle = <span style=color:#e6db74>&#34;0_alexheld&#34;</span>
-<span style=display:block;width:100%;background-color:#3c3d38>  twitter = twitterBuilder.build()
-</span>
+  twitter = twitterBuilder.build()
+
   <span style=color:#66d9ef>val</span> companyBuilder = CompanyBuilder()
   companyBuilder.name = <span style=color:#e6db74>&#34;MegaCorp&#34;</span>
   companyBuilder.city = <span style=color:#e6db74>&#34;Cologne&#34;</span>
-<span style=display:block;width:100%;background-color:#3c3d38>  company = companyBuilder.build()
-</span> }
+  company = companyBuilder.build()
+ }
 }
 </code></pre></div><p>Ich gebe zu der nächste Code Block hat es in sich.
 Schau ihn dir erstmal an und dann dekonstruieren wir den mal.</p><h6 id=mainkt-9>main.kt</h6><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-kotlin data-lang=kotlin><span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>ClientBuilder</span>.twitter(c: TwitterBuilder.() <span style=color:#f92672>-&gt;</span> Unit)  {
@@ -250,8 +250,7 @@ Wenn apply ausgeführt wird, wird es aus dem Kontext des Empfängs aufgerufen, w
  c(builder)
  <span style=color:#66d9ef>return</span> builder.build()
 }
-</code></pre></div><br><p><strong>[2]</strong> <code>twitter = TwitterBuilder().apply(c).build()</code></p><p>Wir sind haben weiterhin <code>ClientBuilder</code> als Empfänger, daher können wir ohne <code>this</code> oder <code>it</code> auf <code>ClientBuilder.setTwitter(t: Twitter)</code> zugreifen und ihn dem von <code>TwitterBuilder().apply(c).build()</code> gebauten <code>Twitter</code> zuweisen.</p><p>Zur Compilezeit wird <code>twitter = TwitterBuilder().apply(c).build()</code> zu <code>ContainerBuilder.setTwitter(buildTwitter(c))</code> umgewandelt. <strong>Typensicher!!</strong></p><br>Was erlaubt uns das jetzt genau?!
-Wir können den `TwitterBuilder` aus unserer 'komplexen Business Logik' entfernen.<h6 id=mainkt-10>main.kt</h6><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-kotlin data-lang=kotlin><span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createClient</span>(): Client {
+</code></pre></div><p><strong>[2]</strong> <code>twitter = TwitterBuilder().apply(c).build()</code></p><p>Wir sind haben weiterhin <code>ClientBuilder</code> als Empfänger, daher können wir ohne <code>this</code> oder <code>it</code> auf <code>ClientBuilder.setTwitter(t: Twitter)</code> zugreifen und ihn dem von <code>TwitterBuilder().apply(c).build()</code> gebauten <code>Twitter</code> zuweisen.</p><p>Zur Compilezeit wird <code>twitter = TwitterBuilder().apply(c).build()</code> zu <code>ContainerBuilder.setTwitter(buildTwitter(c))</code> umgewandelt. <strong>Typensicher!!</strong></p><h6 id=mainkt-10>main.kt</h6><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-kotlin data-lang=kotlin><span style=color:#66d9ef>fun</span> <span style=color:#a6e22e>createClient</span>(): Client {
 
  <span style=color:#66d9ef>return</span> createClient {
   firstName = <span style=color:#e6db74>&#34;Alexander&#34;</span>
