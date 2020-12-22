@@ -92,35 +92,3 @@ languages:
         show: true
         cta: "Kontakt"
         link: "de/kontakt/"
-
-markup:
-  defaultMarkdownHandler: goldmark
-  goldmark:
-    extensions:
-      definitionList: true
-      footnote: true
-      linkify: true
-      strikethrough: true
-      table: true
-      taskList: true
-      typographer: true
-    parser:
-      attribute: true
-      autoHeadingID: true
-      autoHeadingIDType: github
-    renderer:
-      hardWraps: false
-      unsafe: true
-      xhtml: true
-  highlight:
-    anchorLineNos: false
-    codeFences: true
-    guessSyntax: true
-    hl_Lines: ""
-    lineAnchors: ""
-    lineNoStart: 1
-    lineNos: false
-    lineNumbersInTable: false
-    noClasses: true
-    style: monokai
-    tabWidth: 4

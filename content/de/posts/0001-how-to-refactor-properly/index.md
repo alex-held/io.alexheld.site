@@ -168,7 +168,7 @@ Der nächste Schritt ist es `createClient` aufzurufen. Dazu definieren wir inlin
 
 ###### main.kt
 
-``` kotlin {linenos=false,hl_lines=[3, 4],linenostart=1}
+``` kotlin
 fun createClientInternal(): Client {
  return createClient(
   object: Consumer<ClientBuilder> {
@@ -195,7 +195,7 @@ Jetzt kriegen wir aber von den Tests einen auf den Deckel. Wir fügen hier schne
 
 ###### MainKtTest.kt
 
-``` kotlin {linenos=false,hl_lines=[1, 14],linenostart=1}
+``` kotlin
  private fun createConsumer(): Consumer<ClientBuilder> {
   return Consumer<ClientBuilder> {
    it.firstName = "Alexander"
@@ -223,7 +223,7 @@ Wir machen aus der inline `Consumer<ClientBuilder>` Implentiertung eine lambda. 
 
 ###### main.kt
 
-``` kotlin {linenos=false,hl_lines=["2-4"],linenostart=1}
+``` kotlin
 fun createClientInternal(): Client {
  return createClient(
   Consumer { builder ->
@@ -247,7 +247,7 @@ fun createClientInternal(): Client {
 
 ###### main.kt
 
-``` kotlin {linenos=false,hl_lines=["3-5", 9, 13],linenostart=1}
+``` kotlin
 fun createClientInternal(): Client {
  return createClient(
   Consumer { it ->
@@ -272,7 +272,7 @@ Dann löschen wir `it` doch mal. Und die Lambda Pfeile brauchen wir durch `it` a
 
 ###### main.kt
 
-``` kotlin {linenos=false,hl_lines=["3-5", 9, 13],linenostart=1}
+``` kotlin
 fun createClientInternal(): Client {
  return createClient(
   Consumer {
@@ -297,7 +297,7 @@ Wir haben also `createClient` die `(ClientBuilder) -> Unit` als Parameter erwart
 
 ###### main.kt
 
-``` kotlin {linenos=false,hl_lines=[1, 3, 8, 20],linenostart=1}
+``` kotlin
 fun createClient(c: (ClientBuilder) -> Unit): Client {
  val builder = ClientBuilder()
  c(builder)
@@ -326,7 +326,7 @@ Der Kotlin Compiler gestattet es runde Klammern für den letzen Parameter wegzul
 
 ###### main.kt
 
-``` kotlin {linenos=false,hl_lines=[7,19],linenostart=1}
+``` kotlin
 fun createClient(c: ClientBuilder.() -> Unit): Client {
  val builder = ClientBuilder()
  c(builder)
@@ -357,7 +357,7 @@ Während bei der Lamda `c: (ClientBuilder) -> Unit` ein `ClientBuilder` als Para
 
 ###### main.kt
 
-``` kotlin {linenos=false,hl_lines=[1,"9-10",14,19],linenostart=1}
+``` kotlin
 fun createClient(c: ClientBuilder.() -> Unit): Client {
  val builder = ClientBuilder()
  c(builder)
@@ -459,7 +459,7 @@ Wir führen den letzen Schritt jetzt auch nocheinmal mit dem `CompanyBuilder` du
 
 ## Vorher
 
-```java
+``` java
 public class BuilderExample {
 
  public Client createClient() {
