@@ -3,7 +3,7 @@ id: 1
 title: "How to refactor properly"
 description: "Let's refactor in small iterative steps a legacy Java Builder into a functional DSL."
 date: 2020-12-22T03:07:19+01:00
-publishDate: 2020-12-19T22:21:42+01:00
+publishDate: 2020-12-22T07:10:42+01:00
 author: "Alexander Held"
 images: []
 draft: false
@@ -15,6 +15,7 @@ tags:
     "functional-programming",
     "clean-code",
     "tutorial",
+	"dsl"
   ]
 ---
 
