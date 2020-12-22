@@ -109,22 +109,14 @@ fun createClientInternal() {
 }
 {{< /highlight >}}
 
-Während dem schreiben der Tests fällt auf, dass wir um die Clients im Debugger besser von einander unterscheiden zu können uns eine kleine Hilfsfunktion bauen.
-
-{{< highlight kotlin >}}
-fun Client.toConsoleString(): String {
- return "${twitter.handle} ${company.name}"
-}
-{{< /highlight >}}
-
-`toConsoleString()` erfüllt zwar ihren Zweck, aber nur wenn ich ich die Funktion aufrufe.
+Schon während dem Schreiben der Tests fällt auf, dass unterschiedliche `Client` Instanzen im Debugger ähnlich wirken. Besser wir basteln uns eine Hilsproperty.
 
 {{< highlight kotlin >}}
 val Client.consoleString: String
  get() = "${twitter.handle} ${company.name}"
 {{< /highlight >}}
 
-So ists besser und lässt sich auch ganz simpel testen 👍🏻
+Ist auch ganz simpel testen 👍🏻
 Gleichzeitig haben wir uns noch eine Test Hilfsfunktion gebaut um nicht in jedem Test code zu duplizieren.
 
 ###### MainKtTest.kt
@@ -149,10 +141,10 @@ private fun createSubject(
  }
 {{< /highlight >}}
 
-Okay. Wir könnten anstelle von neue Builder mitten in der Business-Logik zu erzeugen, einfach nur Funktionen weiterreichen, die irgendwann lazy den Client bauen. Somit hätten wir Business Logik bei BusinessLogik und Funktionen bei Funktionen. Das Stichwort ist hier [Kohärenz](<https://de.wikipedia.org/wiki/Koh%C3%A4renz_(Physik)>).
+Okay. Wir werden die Erstellung des `Clients` von der technischen Implementierung der Erstellung trennen. Somit gewähren wir, dass Business-Logik bei Business-Logik, Konfiguration bei Konfiguration und Funktionen bei Funktionen anzufinden sind. Das Stichwort lautet hier [Kohärenz](<https://de.wikipedia.org/wiki/Koh%C3%A4renz_(Physik)>).
 
 ![Consumer<ClientBuilder> Interface](./images/consumer_interface.png)
-Wir übergeben `createClient` als Parameter die Funktion `accept(cb: ClientBuilder)` mit der der `ClientBuilder` dann konfiguriert werden kann.
+Die Funktion `createClient` erhält als Parameter die Instruktionen zur Konfiguration eines `ClientBuilder` in Form eines `Consumer<ClientBuilder>`. Wir können nun jederzeit die Funktion `accept(cb: ClientBuilder)` aufrufen, mit der der `ClientBuilder` dann konfiguriert wird.
 
 ###### main.kt
 
@@ -164,7 +156,7 @@ fun createClient(c: Consumer<ClientBuilder>): Client {
 }
 {{< /highlight >}}
 
-Der nächste Schritt ist es `createClient` aufzurufen. Dazu definieren wir inline ein `object` dass `Consumer<ClientBuilder>` implementiert. Hierzu müssen wir `accept(builder: ClientBuilder)` überschreiben.
+Im nächsten Schritt rufen wir `createClient` auf. Wir können uns inline ein `object` definieren, dass `Consumer<ClientBuilder>` implementiert. Wir müssen lediglich `accept(builder: ClientBuilder)` überschreiben.
 
 ###### main.kt
 
@@ -185,7 +177,6 @@ fun createClientInternal(): Client {
     companyBuilder.name = "MegaCorp"
     builder.company = companyBuilder.build()
    }
-
   }
  )
 }
@@ -219,7 +210,7 @@ Jetzt kriegen wir aber von den Tests einen auf den Deckel. Wir fügen hier schne
  }
 {{< /highlight >}}
 
-Wir machen aus der inline `Consumer<ClientBuilder>` Implentiertung eine lambda. `builder` übernimmt weiterhin die selbe Rolle: Konfiguration des `ClientBuilders`.
+Wir machen aus der inline `Consumer<ClientBuilder>` Implentiertung eine Lambda. `builder` übernimmt weiterhin die selbe Rolle: Die Konfiguration des `ClientBuilders`.
 
 ###### main.kt
 
@@ -243,7 +234,7 @@ fun createClientInternal(): Client {
 {{< /highlight >}}
 
 `builder` bennenen wir um nach `it`.
-[it](https://discuss.kotlinlang.org/t/it-keyword/6869) hat in kotlin eine besondere Bedeutung. Es ist quasi der default 'Name', wenn es nur einen Lamda Argument gibt.
+[it](https://discuss.kotlinlang.org/t/it-keyword/6869) hat in kotlin eine besondere Bedeutung. Es ist quasi der default 'Name', wenn es nur ein Lamda Argument gibt. Die Umbennenung ist nicht notwendig, hilft aber hoffentlich beim Verstehen des Konzepts.
 
 ###### main.kt
 
@@ -266,7 +257,7 @@ fun createClientInternal(): Client {
 }
 {{< /highlight >}}
 
-Dann löschen wir `it` doch mal. Und die Lambda Pfeile brauchen wir durch `it` auch nicht mehr. Wir können `it` aber trotzdem im scope benutzen wir wir wollen. Der Kompiler weiß was abgeht.
+Dann löschen wir das überflüssige `it` doch mal. Und die Lambda Pfeile brauchen wir auch nicht mehr. Wir können `it` aber trotzdem im Scope benutzen wir wir wollen. Der Kompiler weiß was abgeht. 😎
 
 ![it ide-syntax hightlighting](./images/it_lamda_default.png)
 
@@ -291,7 +282,7 @@ fun createClientInternal(): Client {
 }
 {{< /highlight >}}
 
-Als nächstes ersetzen wir in der `createClient` Funcktion den Parameter `c: Consumer<ClientBuilder>)` durch `c: (ClientBuilder) -> Unit`. Wir ersetzen hier eine Implementierung des interfaces `Consumer<ClientBuilder>` durch eine Lamda mit einer anderen Lamda `(ClientBuilder) -> Unit`. Der Vorteil ist, dass wir nicht mehr mehr an die Implentierung der Methode `Consumer<ClientBuilder>.accept(ClientBuilder)` gekoppelt sind.
+Als nächstes ersetzen wir in der `createClient` Funktion den Parameter `c: Consumer<ClientBuilder>)` durch `c: (ClientBuilder) -> Unit`. Wir ersetzen hier eine Implementierung des interfaces `Consumer<ClientBuilder>` durch eine Lamda mit einer anderen Lamda `(ClientBuilder) -> Unit`. Der Vorteil ist, dass wir nicht mehr mehr an die Implentierung der Methode `Consumer<ClientBuilder>.accept(ClientBuilder)` gekoppelt sind.
 
 Wir haben also `createClient` die `(ClientBuilder) -> Unit` als Parameter erwartet. `Unit` bedeutet in dem Fall: die Funktion soll kein Rückgabewert besitzen. Wir können also genau das selbe machen wie die ganze Zeit nur tauschen wir `c.accept(builder)` durch `c(builder)` aus.
 
