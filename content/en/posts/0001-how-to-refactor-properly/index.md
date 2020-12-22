@@ -32,7 +32,7 @@ Unser Ziel ist es, den Builder einfacher lesbarer zu bekommen. Stellt euch vor w
 [SourceCode zum mitmachen](https://github.com/alex-held/how-to-refactor-properly)
 
 Wir beginnen unseren Ausflug hier mit dieser Ausgangslage.
-`foo()` soll also einen `Client` bauen. Soweit to gut.
+`foo()` soll also einen `Client` bauen. Soweit so gut.
 
 ###### BuilderExample.java
 
