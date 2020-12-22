@@ -1,5 +1,5 @@
 ---
-id: 1
+id: 3
 title: "How to measure water levels using raspi"
 description: "How to measure water levels using raspi."
 date: 2020-12-19T22:32:19+01:00
@@ -39,3 +39,17 @@ print "hello world!"
 ## Testing
 
 Fill water in the bucket. When the distance of ultrasonic sensor from the water is around 4 centimetre, the buzzer will beep, alerting the bucket is almost full.
+
+The 6 best dish review twitter feeds to follow. The best ways to utilize minute meals. The best ways to utilize safe food handling tips. The best ways to utilize safe food handling tips. 17 facts about food processors that will impress your friends. How cooking healthy food is making the world a better place. Why you'll never succeed at healthy eating facts. 16 things you don't want to hear about chefs. 9 uses for mexican food.
+
+### Image via markdown
+
+![Dummy image.](./images/dummy-image.jpg)
+
+### Image via shortcode
+
+{{< figure src="./images/dummy-image.jpg" title="Dummy image using Hugo shortcode." >}}
+
+### Image via html5
+
+<img src="./images/dummy-image.jpg" alt="Dummy image with HTML.">
