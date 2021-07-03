@@ -6,7 +6,7 @@ RUN sudo apt-get update && \
 
 USER gitpod
 RUN brew install fzf
-RUN brew install mob
+RUN brew install remotemobprogramming/brew/mob
 RUN brew install hugo
 
 USER gitpod
