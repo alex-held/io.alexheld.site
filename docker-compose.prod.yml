@@ -11,5 +11,5 @@ services:
       - "${HTTP_PORT}:80"
       - "${HTTPS_PORT}:443"
     volumes:
-      - ./data/certs:/etc/nginx/certs
+      - ${CERTS_DIRECTORY}:/etc/nginx/certs
     restart: always
