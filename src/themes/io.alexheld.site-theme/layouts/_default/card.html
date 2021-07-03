@@ -1,0 +1,71 @@
+<article class="c">
+	<header class="c__header">
+		<h1 class="c__header__title">
+			<a href="{{ .Permalink }}" class="c__header__link" alt="{{ .Title }}.">
+                {{ .Title }}
+            </a>
+        </h1>
+
+		{{ if ne .Type "page" }}
+        {{ if and $.Site.Params.posts.showDate $.Site.Params.posts.showAuthor }}
+        <p class="c__header__date date">
+            {{ dateFormat $.Site.Params.posts.dateFormat .Date }} <span style="color: var(--primary-light);">by</span> <span style="color: var(--secondary-text);">{{ $.Params.author }}.</span>
+        </p>
+        {{ else if $.Site.Params.posts.showDate }}
+        <p class="c__header__date date">{{ dateFormat $.Site.Params.posts.dateFormat .Date }}</p>
+        {{ else if $.Site.Params.posts.showAuthor }}
+        <p class="c__header__author author">By {{ $.Params.author }}.</p>
+        {{ end }}
+        {{ end }}
+	</header>
+
+
+	<main class="c__body">
+		{{ .Content | truncate 480 }}
+	</main>
+
+
+	<footer class="c__footer">
+		{{ .Render "tags" }}
+	</footer>
+	<br>
+    <hr>
+
+
+</article>
+
+
+
+<!--
+
+<article class="card">
+    <header class="card__header">
+        <h1 class="card__header__title">
+            <a href="{{ .Permalink }}" class="card__header__link" alt="{{ .Title }}.">
+                {{ .Title }}
+            </a>
+        </h1>
+        {{ if ne .Type "page" }}
+        {{ if and $.Site.Params.posts.showDate $.Site.Params.posts.showAuthor }}
+        <p class="card__header__date date">
+            {{ dateFormat $.Site.Params.posts.dateFormat .Date }} By {{ $.Params.author }}.
+        </p>
+        {{ else if $.Site.Params.posts.showDate }}
+        <p class="card__header__date date">{{ dateFormat $.Site.Params.posts.dateFormat .Date }}</p>
+        {{ else if $.Site.Params.posts.showAuthor }}
+        <p class="card__header__author author">By {{ $.Params.author }}.</p>
+        {{ end }}
+        {{ end }}
+    </header>
+
+    <main class="card__body">
+        {{ .Content | truncate 480 }}
+    </main>
+
+    <footer class="card__footer">
+        {{ .Render "tags" }}
+    </footer>
+	<br>
+    <hr >
+</article>
+-->

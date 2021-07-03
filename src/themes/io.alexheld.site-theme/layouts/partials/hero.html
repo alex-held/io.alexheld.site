@@ -1,0 +1,10 @@
+<main class="hero" {{ if $.Site.Params.hero.imageFile }}
+    style="background-image: url('{{ $.Site.BaseURL }}images/{{  $.Site.Params.hero.imageFile }}" {{ end }}>
+    <div class="hero__caption" {{ if $.Site.Params.hero.textColor }} style="color: {{ $.Site.Params.hero.textColor }};"
+        {{ end }}>
+        {{ .Content }}
+        {{ if $.Site.Params.cta.show }}
+        {{ partial "cta-btn.html" . }}
+        {{ end }}
+    </div>
+</main>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang }}">
+{{- partial "head.html" . -}}
+
+
+<body>
+    {{- partial "header.html" . -}}
+    {{- block "main" . }}{{- end }}
+    {{- partial "footer.html" . -}}
+</body>
+
+</html>
+
+<!--
+<body class="
+{{- if (or (ne .Kind `page` ) (eq .Layout `archives`) (eq .Layout `search`)) -}}
+{{- print "list" -}}
+{{- else }}
+{{- print "single" -}}
+{{- end -}}
+{{- if eq $.Site.Params.defaultTheme `dark` -}}
+{{- print " dark" }}
+{{- end -}}
+">
+-->

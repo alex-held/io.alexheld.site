@@ -1,0 +1,12 @@
+{{ define "main" }}
+<main class="resume">
+
+	<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.0.943/pdf.min.js">
+	</script>
+
+    <h1 class="resume__title">{{ .Title }}</h1>
+	<iframe class="resume__content" src="{{ .Site.Params.documents.resumeUrl }}" width="800px" height="800px"></iframe>
+
+</main>
+{{ end }}

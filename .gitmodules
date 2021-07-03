@@ -1,5 +1,5 @@
 [submodule "themes/io.alexheld.site-theme"]
-	path = themes/io.alexheld.site-theme
+	path = src/themes/io.alexheld.site-theme
 	url = https://github.com/alex-held/io.alexheld.site-theme
 [submodule ".tooling"]
 	path = .tooling
