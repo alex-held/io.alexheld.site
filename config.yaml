@@ -1,4 +1,4 @@
-baseURL: "https://alexheld.io/"
+baseURL: "/"
 languageCode: "en-us"
 theme: "io.alexheld.site-theme"
 title: "Alexander Held"
