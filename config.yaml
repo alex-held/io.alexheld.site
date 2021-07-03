@@ -73,7 +73,7 @@ languages:
     languageName: "en"
     weight: 1
     contentDir: "content/en"
-
+    staticDir: "static"
   de:
     languageName: "de"
     weight: 2
