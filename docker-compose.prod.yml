@@ -2,8 +2,8 @@ version: "3.7"
 
 services:
   frontend:
-    env_file: .env
-    image: alexheld/io.alexheld.site
+    env_file: .prod.env
+    image: alexheld/io.alexheld.site:latest
     build:
       context: .
       dockerfile: Dockerfile

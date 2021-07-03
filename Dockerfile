@@ -1,5 +1,8 @@
 FROM klakegg/hugo as builder
 
+EXPOSE 80
+EXPOSE 443
+
 ADD . /src
 WORKDIR /src
 RUN hugo -D --minify
