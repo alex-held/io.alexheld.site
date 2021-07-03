@@ -21,7 +21,7 @@ params:
 
   hero:
     textColor: ""
-    imageFile: "developer.svg"
+    imageFile: "images/developer.svg"
 
   separator:
     show: false
