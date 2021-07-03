@@ -1,1 +1,15 @@
-.tooling/docker-compose.prod.yml
+version: "3.7"
+
+services:
+  site:
+    env_file: .env
+    image: ${DOCKER_IMAGE}:${TAG}
+    build:
+      context: .
+      dockerfile: site.Dockerfile
+    ports:
+      - "${HTTP_PORT}:80"
+      - "${HTTPS_PORT}:443"
+    volumes:
+      - ${CERT_DIRECTORY}:/etc/nginx/certs
+    restart: always
