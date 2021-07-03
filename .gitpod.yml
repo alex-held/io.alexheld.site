@@ -1,0 +1,29 @@
+tasks:
+  - init: git submodule update --init
+    command: git submodule update --init
+
+ports:
+  - port: 8080
+    onOpen: open-preview
+
+image:
+  file: .gitpod.Dockerfile
+
+vscode:
+  extensions:
+    - aeschli.vscode-css-formatter
+    - editorconfig.editorconfig
+    - me-dutour-mathieu.vscode-github-actions
+    - golang.go
+    - ecmel.vscode-html-css
+    - tht13.html-preview-vscode
+    - shd101wyy.markdown-preview-enhanced
+    - davidanson.vscode-markdownlint
+    - william-voyek.vscode-nginx
+    - ahmadalli.vscode-nginx-conf
+    - christian-kohler.npm-intellisense
+    - bmalehorn.shell-syntax
+    - timonwong.shellcheck
+    - vscode-icons-team.vscode-icons
+    - redhat.vscode-yaml
+    - dotjoshjohnson.xml
