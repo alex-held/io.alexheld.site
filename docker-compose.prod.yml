@@ -3,13 +3,47 @@ version: "3.7"
 services:
   site:
     env_file: .env
-    image: ${DOCKER_IMAGE}:${TAG}
+    image: alexheld/io.alexheld.site:v1.2.3
     build:
       context: .
       dockerfile: site.Dockerfile
-    ports:
-      - "${HTTP_PORT}:80"
-      - "${HTTPS_PORT}:443"
-    volumes:
-      - ${CERT_DIRECTORY}:/etc/nginx/certs
+      labels: 
+        traefik.enable: true
+        traefik.docker.network: proxy
+        
+        
+        traefik.http.routers.website-router.rule: "Host(`www.alexheld.io`) || Host(`alexheld.io`)" 
+        traefik.http.routers.website-router.entrypoints: websecure
+        traefik.http.routers.website-router.tls: "true"
+        traefik.http.routers.website-router.tls.certresolver: "le-dns"
+        traefik.http.routers.website-router.service: website
+
+
+        # You can remove the next line, only custom config for me
+#        traefik.http.routers.site.middlewares: "deny-robots@file, clean-headers@file"
+        traefik.http.services.website.loadbalancer.server.port: 443
+
+
+        # traefik.http.routers.site-http.rule: host(`alexheld.io`)
+        # traefik.http.routers.site-http.entrypoints: web
+        # traefik.http.routers.site-http.service: website
+        # traefik.http.routers.site-http.tls: "false"
+        # traefik.http.routers.site-http.tls.certresolver: "myresolver"
+        # traefik.http.services.site-http.loadbalancer.server.port: 80
+
+
+        # You can remove the next line, only custom config for me
+        # traefik.http.routers.website-router-http.middlewares: "deny-robots@file, clean-headers@file"
+        
+    #ports:
+    #  - "${HTTP_PORT}:80"
+    #  - "${HTTPS_PORT}:443"
+    #volumes:
+    #  - ${CERT_DIRECTORY}:/etc/nginx/certs
     restart: always
+
+
+
+networks: 
+  proxy:
+    external: true
