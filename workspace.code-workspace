@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../../../../opt/traefik"
+		},
+		{
+			"path": "../../../../../opt/traefik2"
+		}
+	],
+	"settings": {}
+}
