@@ -1,7 +1,4 @@
-namespace: ""
 name: "hl-traefik"
-
-
 
 url: "example.com"
 port: 1313
@@ -13,7 +10,7 @@ network:
   name: "proxy"
 
 traefik:
-  ruleQuery: Host(`{{.deployUrl}}`)
+  ruleQuery: "Host(`{{.deployUrl}}`)"
 
 storage:
   size: "100Mi"

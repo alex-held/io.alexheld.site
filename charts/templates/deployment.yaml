@@ -4,7 +4,7 @@ metadata:
   name: {{ .Chart.Name | quote }}
   annotations:
     helm.sh/chart: {{ include "io.alexheld.site.chart" . }}
-    traefik.docker.network: {{ .Values.network.name }}
+    traefik.docker.network: {{ .Values.network.name | quote }}
     traefik.enable: "true"
     traefik.http.routers.website.entrypoints: {{ .Values.network.entryPoint  | quote }}
     traefik.http.routers.website.rule: {{ .Values.traefik.ruleQuery  | quote }}
@@ -12,47 +12,51 @@ metadata:
     traefik.http.routers.website.tls: "true"
     traefik.http.routers.website.tls.certresolver: {{ .Values.certresolve  | quote }}
     traefik.http.services.website.loadbalancer.passhostheader: "true"
-    traefik.http.services.website.loadbalancer.server.port: {{ .Values.port }}
+    traefik.http.services.website.loadbalancer.server.port: {{ .Values.port | quote }}
     {{- if .Chart.AppVersion }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}{{- end }}
-    app.kubernetes.io/managed-by: {{ .Release.Service  }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+    {{- end }}
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
   labels:
     helm.sh/chart: {{ include "io.alexheld.site.chart" . }}
     app.kubernetes.io/name: {{ include "io.alexheld.site.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
     {{- if .Chart.AppVersion }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}{{- end }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+    {{- end }}
     app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
 spec:
   replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "io.alexheld.site.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/instance: {{ .Release.Name | quote }}
   strategy:
     type: Recreate
   template:
     metadata:
       annotations:
         helm.sh/chart: {{ include "io.alexheld.site.chart" .  }}
-        traefik.docker.network: {{ .Values.network.name  | quote }}
-        traefik.enable: true
-        traefik.http.routers.website.entrypoints: {{ .Values.network.entryPoint  | quote }}
+        traefik.docker.network: {{ .Values.network.name | quote }}
+        traefik.enable: "true"
+        traefik.http.routers.website.entrypoints: {{ .Values.network.entryPoint | quote }}
         traefik.http.routers.website.rule: {{ .Values.traefik.ruleQuery  | quote }}
-        traefik.http.routers.website.service: {{ .Chart.Name  | quote }}
-        traefik.http.routers.website.tls: true
-        traefik.http.routers.website.tls.certresolver: {{ .Values.certresolve  | quote }}
-        traefik.http.services.website.loadbalancer.passhostheader: true
-        traefik.http.services.website.loadbalancer.server.port: {{ .Values.port }}
-        {{ if .Chart.AppVersion }}
-        app.kubernetes.io/version: {{ .Chart.AppVersion }}{{ end }}
+        traefik.http.routers.website.service: {{ .Chart.Name | quote }}
+        traefik.http.routers.website.tls: "true"
+        traefik.http.routers.website.tls.certresolver: {{ .Values.certresolve | quote }}
+        traefik.http.services.website.loadbalancer.passhostheader: "true"
+        traefik.http.services.website.loadbalancer.server.port: {{ .Values.port | quote }}
+        {{- if .Chart.AppVersion }}
+        app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+        {{- end }}
         app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
       labels:
         helm.sh/chart: {{ include "io.alexheld.site.chart" . }}
         app.kubernetes.io/name: {{ include "io.alexheld.site.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name  | quote }}
-        {{ if .Chart.AppVersion }}
-        app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}{{ end }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        {{- if .Chart.AppVersion }}
+        app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+        {{- end }}
         app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
     spec:
       containers:
@@ -71,7 +75,7 @@ spec:
         name: {{ .Chart.Name | quote }}
         ports:
         - name: "frontend port" 
-          containerPort: {{ .Values.port }}
+          containerPort: {{ .Values.port | quote }}
           protocol: TCP
         volumeMounts:
         - mountPath: /src
