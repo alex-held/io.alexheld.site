@@ -88,3 +88,23 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+
+
+
+{{- define "io.alexheld.site.traefikRuleQuery" -}}
+{{- $traefikQuery := "" }}
+{{- $urls := .Values.urls | quote }}
+{{- $domainList := splitList "," $urls }}
+{{- $length := len $domainList }}
+{{- range $i, $domain := $domainList }}
+  {{- if eq $i 0 -}}
+      {{ $traefikQuery := printf "%s .." $domain }}
+  {{- else -}}
+      {{ $traefikQuery := printf "%s && Host(`$domain`)" $traefikQuery }}
+  {{- end -}}
+{{- end -}}
+
+{{ print $traefikQuery }}
+
+{{ end -}}

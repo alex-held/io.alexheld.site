@@ -1,16 +1,9 @@
 name: "hl-traefik"
-
-url: "example.com"
+urls: "alexheld.io"
 port: 1313
-
 certresolver: "le-dns"
-
 network:
   entryPoint: "websecure"
   name: "proxy"
-
-traefik:
-  ruleQuery: "Host(`{{.deployUrl}}`)"
-
 storage:
   size: "100Mi"

@@ -1,0 +1,149 @@
+---
+# Source: io.alexheld.site/templates/proxy-networkpolicy.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: null
+  name: proxy-policy
+spec:
+  podSelector:
+    matchLabels:
+      io.kompose.network/proxy: "true"
+  ingress:
+    - from:
+      - podSelector:
+            matchLabels:
+              io.kompose.network/proxy: "true"
+---
+# Source: io.alexheld.site/templates/website-claim0-persistentvolumeclaim.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: io.alexheld.site-claim0
+  name: io.alexheld.site-claim0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
+---
+# Source: io.alexheld.site/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    helm.sh/chart: io.alexheld.site-0.1.0
+    traefik.docker.network: "proxy"
+    traefik.enable: "true"
+    traefik.http.routers.website.entrypoints: "websecure"
+    traefik.http.routers.website.rule: "Host(`alexheld.io`)"
+    traefik.http.routers.website.service: "io.alexheld.site"
+    traefik.http.routers.website.tls: "true"
+    traefik.http.routers.website.tls.certresolver: "le-dns"
+    traefik.http.services.website.loadbalancer.passhostheader: "true"
+    traefik.http.services.website.loadbalancer.server.port: "1313"
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: "Helm"
+  labels:
+    helm.sh/chart: io.alexheld.site-0.1.0
+    app.kubernetes.io/name: io.alexheld.site
+    app.kubernetes.io/instance: "website"
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: "Helm"
+  name: "io.alexheld.site"
+spec:
+  ports:
+  - name: 
+    port: 
+    targetPort: 
+  selector:
+    app.kubernetes.io/name: io.alexheld.site
+    app.kubernetes.io/instance: "website"
+status:
+  loadBalancer: {}
+---
+# Source: io.alexheld.site/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "io.alexheld.site"
+  annotations:
+    helm.sh/chart: io.alexheld.site-0.1.0
+    traefik.docker.network: "proxy"
+    traefik.enable: "true"
+    traefik.http.routers.website.entrypoints: "websecure"
+    traefik.http.routers.website.rule: "Host(`alexheld.io`)"
+    traefik.http.routers.website.service: "io.alexheld.site"
+    traefik.http.routers.website.tls: "true"
+    traefik.http.routers.website.tls.certresolver: 
+    traefik.http.services.website.loadbalancer.passhostheader: "true"
+    traefik.http.services.website.loadbalancer.server.port: "1313"
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: "Helm"
+  labels:
+    helm.sh/chart: io.alexheld.site-0.1.0
+    app.kubernetes.io/name: io.alexheld.site
+    app.kubernetes.io/instance: "website"
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: "Helm"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: io.alexheld.site
+      app.kubernetes.io/instance: "website"
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        helm.sh/chart: io.alexheld.site-0.1.0
+        traefik.docker.network: "proxy"
+        traefik.enable: "true"
+        traefik.http.routers.website.entrypoints: "websecure"
+        traefik.http.routers.website.rule: "Host(`alexheld.io`)"
+        traefik.http.routers.website.service: "io.alexheld.site"
+        traefik.http.routers.website.tls: "true"
+        traefik.http.routers.website.tls.certresolver: 
+        traefik.http.services.website.loadbalancer.passhostheader: "true"
+        traefik.http.services.website.loadbalancer.server.port: "1313"
+        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/managed-by: "Helm"
+      labels:
+        helm.sh/chart: io.alexheld.site-0.1.0
+        app.kubernetes.io/name: io.alexheld.site
+        app.kubernetes.io/instance: "website"
+        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/managed-by: "Helm"
+    spec:
+      containers:
+      - args:
+        - server
+        - --baseURL
+        - https://
+        - --appendPort=false
+        env:
+        - name: HUGO_BASEURL
+          value: https://
+        - name: "HUGO_ENV"
+          value: "production"
+        image: "klakegg/hugo:latest"
+        ressources: {}
+        name: "io.alexheld.site"
+        ports:
+        - name: "frontend port" 
+          containerPort: "1313"
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /src
+          name: io.alexheld.site-claim0
+      restartPolicy: Always
+      volumes:
+      - name: io.alexheld.site-claim0
+        persistentVolumeClaim:
+          claimName: io.alexheld.site-claim0
+status: ""

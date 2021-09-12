@@ -6,8 +6,8 @@ metadata:
     helm.sh/chart: {{ include "io.alexheld.site.chart" . }}
     traefik.docker.network: {{ .Values.network.name | quote }}
     traefik.enable: "true"
-    traefik.http.routers.website.entrypoints: {{ .Values.network.entryPoint  | quote }}
-    traefik.http.routers.website.rule: {{ .Values.traefik.ruleQuery  | quote }}
+    traefik.http.routers.website.entrypoints: {{ .Values.network.entryPoint | quote }}
+    traefik.http.routers.website.rule: {{ printf "Host(`%s`)" .Values.urls  | quote }}
     traefik.http.routers.website.service: {{ .Chart.Name  | quote }}
     traefik.http.routers.website.tls: "true"
     traefik.http.routers.website.tls.certresolver: {{ .Values.certresolve  | quote }}
@@ -40,7 +40,7 @@ spec:
         traefik.docker.network: {{ .Values.network.name | quote }}
         traefik.enable: "true"
         traefik.http.routers.website.entrypoints: {{ .Values.network.entryPoint | quote }}
-        traefik.http.routers.website.rule: {{ .Values.traefik.ruleQuery  | quote }}
+        traefik.http.routers.website.rule: {{ printf "Host(`%s`)" .Values.urls  | quote }}
         traefik.http.routers.website.service: {{ .Chart.Name | quote }}
         traefik.http.routers.website.tls: "true"
         traefik.http.routers.website.tls.certresolver: {{ .Values.certresolve | quote }}
