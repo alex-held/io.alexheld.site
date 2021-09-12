@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    helm.sh/chart: {{ include "io.alexheld.site.chart" .  }}
+    traefik.docker.network: {{ .Values.network.name  | quote }}
+    traefik.enable: "true"
+    traefik.http.routers.website.entrypoints: {{ .Values.network.entryPoint  | quote }}
+    traefik.http.routers.website.rule: {{ .Values.traefik.ruleQuery  | quote }}
+    traefik.http.routers.website.service: {{ .Chart.Name  | quote }}
+    traefik.http.routers.website.tls: "true"
+    traefik.http.routers.website.tls.certresolver: {{ .Values.certresolve | quote }}
+    traefik.http.services.website.loadbalancer.passhostheader: "true"
+    traefik.http.services.website.loadbalancer.server.port: {{ .Values.port }}
+    {{ if .Chart.AppVersion }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }} {{ end }}
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+  labels:
+    helm.sh/chart: {{ include "io.alexheld.site.chart" . }}
+    app.kubernetes.io/name: {{ include "io.alexheld.site.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    {{- if .Chart.AppVersion }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}{{ end }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  name: {{ .Chart.Name | quote }}
+spec:
+  ports:
+  - name: {{ .Values.Port | quote }}
+    port: {{ .Values.Port }}
+    targetPort: {{ .Values.Port }}
+  selector:
+    app.kubernetes.io/name: {{ include "io.alexheld.site.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote  }}
+status:
+  loadBalancer: {}

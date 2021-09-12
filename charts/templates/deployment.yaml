@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name | quote }}
+  annotations:
+    helm.sh/chart: {{ include "io.alexheld.site.chart" . }}
+    traefik.docker.network: {{ .Values.network.name }}
+    traefik.enable: "true"
+    traefik.http.routers.website.entrypoints: {{ .Values.network.entryPoint  | quote }}
+    traefik.http.routers.website.rule: {{ .Values.traefik.ruleQuery  | quote }}
+    traefik.http.routers.website.service: {{ .Chart.Name  | quote }}
+    traefik.http.routers.website.tls: "true"
+    traefik.http.routers.website.tls.certresolver: {{ .Values.certresolve  | quote }}
+    traefik.http.services.website.loadbalancer.passhostheader: "true"
+    traefik.http.services.website.loadbalancer.server.port: {{ .Values.port }}
+    {{- if .Chart.AppVersion }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}{{- end }}
+    app.kubernetes.io/managed-by: {{ .Release.Service  }}
+  labels:
+    helm.sh/chart: {{ include "io.alexheld.site.chart" . }}
+    app.kubernetes.io/name: {{ include "io.alexheld.site.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- if .Chart.AppVersion }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}{{- end }}
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "io.alexheld.site.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        helm.sh/chart: {{ include "io.alexheld.site.chart" .  }}
+        traefik.docker.network: {{ .Values.network.name  | quote }}
+        traefik.enable: true
+        traefik.http.routers.website.entrypoints: {{ .Values.network.entryPoint  | quote }}
+        traefik.http.routers.website.rule: {{ .Values.traefik.ruleQuery  | quote }}
+        traefik.http.routers.website.service: {{ .Chart.Name  | quote }}
+        traefik.http.routers.website.tls: true
+        traefik.http.routers.website.tls.certresolver: {{ .Values.certresolve  | quote }}
+        traefik.http.services.website.loadbalancer.passhostheader: true
+        traefik.http.services.website.loadbalancer.server.port: {{ .Values.port }}
+        {{ if .Chart.AppVersion }}
+        app.kubernetes.io/version: {{ .Chart.AppVersion }}{{ end }}
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+      labels:
+        helm.sh/chart: {{ include "io.alexheld.site.chart" . }}
+        app.kubernetes.io/name: {{ include "io.alexheld.site.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name  | quote }}
+        {{ if .Chart.AppVersion }}
+        app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}{{ end }}
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    spec:
+      containers:
+      - args:
+        - server
+        - --baseURL
+        - https://{{ .Values.url }}
+        - --appendPort=false
+        env:
+        - name: HUGO_BASEURL
+          value: https://{{ .Values.url }}
+        - name: "HUGO_ENV"
+          value: "production"
+        image: "klakegg/hugo:latest"
+        ressources: {}
+        name: {{ .Chart.Name | quote }}
+        ports:
+        - name: "frontend port" 
+          containerPort: {{ .Values.port }}
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /src
+          name: {{ .Chart.Name }}-claim0
+      restartPolicy: Always
+      volumes:
+      - name: {{ .Chart.Name }}-claim0
+        persistentVolumeClaim:
+          claimName: {{ .Chart.Name }}-claim0
+status: ""
